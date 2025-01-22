@@ -43,6 +43,8 @@
 */
 uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
 {
+  
+  
   return 0;
 }
 
@@ -67,7 +69,18 @@ uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
 */
 uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
 {
-  return 0;
+  //Check if in range
+  if (byteNum >= 0 && byteNum < 8)
+  {
+    
+    return (source >> (byteNum * 8)) & 0xFF;
+
+  }
+  else
+  {
+    return 0;
+  }
+
 }
 
 /**
