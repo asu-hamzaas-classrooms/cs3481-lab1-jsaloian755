@@ -160,14 +160,20 @@ uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
  */
 uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
 {
-  // Check if in range
+  // Check if out of range
   if (low < 0 || high < 0 || low > 63 || high > 63 || low > high)
   {
-    return 0;
+    return source;
+  }
+
+  if (high - low + 1 == 64)
+  {
+    return 0xffffffffffffffff;
   }
   
+  uint64_t mask = (1 << ((high - low) + 1)) - 1;
+  return source | (mask << low);
   
-
 }
 
 /**
@@ -192,7 +198,17 @@ uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
  */
 uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
 {
-  return 0;
+  // Check if out of range
+  if (low < 0 || high < 0 || low > 63 || high > 63 || low > high)
+  {
+    return source;
+  }
+
+  // Create mask
+  uint64_t mask = (1 << ((high - low) + 1)) - 1;
+
+  // return
+  return source & (~(mask << low));
 }
 
 
@@ -223,7 +239,25 @@ uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
 uint64_t Tools::copyBits(uint64_t source, uint64_t dest, 
                          int32_t srclow, int32_t dstlow, int32_t length)
 {
-   return 0; 
+   // Calculate the high and low order bits for each integer
+   int32_t srchigh = (srclow + length) - 1;
+   int32_t dsthigh = (dstlow + length) - 1;
+
+   // Check if out of range
+   if (srclow < 0 || dstlow < 0 || srchigh > 63 || dsthigh > 63 || 
+        srclow > srchigh || dstlow > dsthigh)
+   {
+    return dest;
+   }
+
+   // Create a copy with selected bits
+   uint64_t copy = getBits(source, srclow, srchigh);
+
+   // Clear space for the copied bits
+   dest = clearBits(dest, dstlow, dsthigh);
+   
+   // Add in the copied bits
+   return dest | (copy << dstlow); 
 }
 
 
@@ -248,6 +282,8 @@ uint64_t Tools::copyBits(uint64_t source, uint64_t dest,
  */
 uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
 {
+  
+  
   return 0;
 }
 
