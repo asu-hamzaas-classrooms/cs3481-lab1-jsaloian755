@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <cstdlib>
+#include <cmath>
 #include <string>
 #include "Tools.h"
 
@@ -43,9 +44,14 @@
 */
 uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
 {
+  uint64_t result = 0;
+
+  for (int i = 0; i < LONGSIZE; i++)
+  {
+    result += static_cast<uint64_t>(bytes[i]) << (i * 8);
+  }
   
-  
-  return 0;
+  return result;
 }
 
 /** 
@@ -110,7 +116,23 @@ uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
  */
 uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
 {
-  return 0;
+  //Check if in range
+  if (low >= 0 && low <= 63 && high >= 0 && high <= 63 && low <= high)
+  {
+    if (high - low + 1 == 64)
+    {
+      return source;
+    }
+    
+    uint64_t mask = (1 << ((high - low) + 1)) - 1;
+    return (source >> low) & mask;
+
+  }
+  else
+  {
+    return 0;
+  }
+  
 }
 
 
@@ -138,7 +160,14 @@ uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
  */
 uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
 {
-  return 0;
+  // Check if in range
+  if (low < 0 || high < 0 || low > 63 || high > 63 || low > high)
+  {
+    return 0;
+  }
+  
+  
+
 }
 
 /**
