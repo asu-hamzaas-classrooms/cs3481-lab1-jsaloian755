@@ -282,9 +282,15 @@ uint64_t Tools::copyBits(uint64_t source, uint64_t dest,
  */
 uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
 {
+  // Calculate the low and high bits of byteNum
+  int32_t low_bit = byteNum * 8;
+  int32_t high_bit = low_bit + 7;
   
-  
-  return 0;
+  /**
+   * Set all bits between low and high to one. The setBits method also 
+   * checks the range of input
+   */
+  return setBits(source, low_bit, high_bit);
 }
 
 
