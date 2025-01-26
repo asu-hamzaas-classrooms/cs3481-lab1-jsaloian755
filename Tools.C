@@ -343,7 +343,17 @@ bool Tools::addOverflow(uint64_t op1, uint64_t op2)
   //      Thus, the way to check for an overflow is to compare the signs of the
   //      operand and the result.  For example, if you add two positive numbers, 
   //      the result should be positive, otherwise an overflow occurred.
-  return false;
+  uint64_t sum = op1 + op2;
+  if (sign(op1) == sign(op2))
+  {
+    // If the sign of the result is the same as the operands, then there is no overflow
+    return !(sign(op1) == sign(sum));
+  }
+  else
+  {
+    // If the sum is equal to (op1 | op2), then no overflow occurs
+    return !(sum == (op1 | op2));
+  }
 }
 
 /**
@@ -372,5 +382,12 @@ bool Tools::subOverflow(uint64_t op1, uint64_t op2)
   //Note: you can not simply use addOverflow in this function.  If you negate
   //op1 in order to an add, you may get an overflow. 
   //NOTE: the subtraction is op2 - op1 (not op1 - op2).
-  return false;
+  
+  // Operation result
+  uint64_t subt = op2 - op1;
+  
+  // Overflow occurs if the signs are different between operands, as well as 
+  // the result of the operation.
+  return (sign(op1) != sign(op2)) && (sign(op2) != sign(subt));
+
 }
